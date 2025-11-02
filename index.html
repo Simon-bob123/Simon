@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>响应式抽屉导航</title>
+  <style>
+    /* 全局导航容器 */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      border-bottom: 1px solid #eee;
+      position: relative; /* 给抽屉导航定位用 */
+    }
+
+    /* 宽屏导航：默认横向排列 */
+    .desktop-nav {
+      display: flex;
+      gap: 25px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .desktop-nav a {
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+    }
+
+    /* 窄屏菜单按钮：默认隐藏 */
+    .mobile-menu-btn {
+      display: none;
+      font-size: 24px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    /* 窄屏抽屉导航：默认隐藏 + 过渡动画 */
+    .mobile-drawer {
+      position: absolute;
+      top: 100%; /* 从导航栏底部开始，实现“向下弹出” */
+      left: 0;
+      width: 100%;
+      background: #fff;
+      list-style: none;
+      padding: 15px 0;
+      margin: 0;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      max-height: 0; /* 初始高度0，隐藏 */
+      overflow: hidden; /* 隐藏超出高度的内容 */
+      transition: max-height 0.3s ease-out; /* 平滑过渡动画 */
+    }
+
+    .mobile-drawer li {
+      padding: 10px 20px;
+    }
+
+    .mobile-drawer a {
+      text-decoration: none;
+      color: #333;
+      font-size: 15px;
+    }
+
+    /* 媒体查询：屏幕＜768px时切换形态 */
+    @media (max-width: 768px) {
+      .desktop-nav { display: none; } /* 隐藏宽屏导航 */
+      .mobile-menu-btn { display: block; } /* 显示窄屏按钮 */
+      /* 抽屉激活时展开（JS会给它加active类） */
+      .mobile-drawer.active { max-height: 200px; } /* 足够装下所有导航项 */
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏HTML -->
+  <nav>
+    <h1>我的网站</h1>
+    <!-- 宽屏导航 -->
+    <ul class="desktop-nav">
+      <li><a href="#">首页</a></li>
+      <li><a href="#">关于</a></li>
+      <li><a href="#">联系</a></li>
+    </ul>
+    <!-- 窄屏菜单按钮 -->
+    <button class="mobile-menu-btn">☰</button>
+    <!-- 窄屏抽屉导航 -->
+    <ul class="mobile-drawer">
+      <li><a href="#">首页</a></li>
+      <li><a href="#">关于</a></li>
+      <li><a href="#">联系</a></li>
+    </ul>
+  </nav>
+
+  <!-- 这里就是JS！用<script>标签嵌入在HTML底部（推荐） -->
+  <script>
+    // 1. 获取按钮和抽屉导航的元素
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    const drawerNav = document.querySelector('.mobile-drawer');
+
+    // 2. 点击按钮，切换抽屉的显示/隐藏（加/删active类）
+    menuBtn.addEventListener('click', () => {
+      drawerNav.classList.toggle('active');
+    });
+
+    // 3. 可选功能：点击抽屉外部，自动关闭抽屉
+    document.addEventListener('click', (e) => {
+      // 判断点击的是不是按钮或抽屉内部——不是的话就关闭
+      if (!menuBtn.contains(e.target) && !drawerNav.contains(e.target)) {
+        drawerNav.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
